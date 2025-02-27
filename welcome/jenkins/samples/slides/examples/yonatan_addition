@@ -1,0 +1,25 @@
+node {
+    stage('Checkout') {
+        checkout scm
+    }
+
+    stage('Build') {
+        echo 'Building the project...'
+        sh 'echo "Build successful!" > build-output.txt'  // יצירת קובץ לדוגמה
+    }
+
+    stage('Test') {
+        echo 'Running tests...'
+        sh 'echo "All tests passed!" > test-results.log'  // יצירת קובץ תוצאות בדיקות
+    }
+
+    stage('Archive Artifacts') {
+        echo 'Archiving artifacts...'
+        archiveArtifacts artifacts: '**/*.txt, **/*.log', fingerprint: true
+    }
+
+    stage('Deploy') {
+        echo 'Deploying the application...'
+        sh 'echo "Deployment done!" > deploy.log'
+    }
+}
