@@ -23,7 +23,7 @@ node {
     stage('Lint & Security Tests'){
         parallelSteps()
     }
-    stage('approve'){
+    stage('Approve'){
         def userInput = input(
             massage: 'Do you want to deploy?',
             parameters: [choice(name: 'DEPLOY_APPROVAL', choices: ['Yes', 'No'], description: 'Select Yes to proceed with deployment')]
