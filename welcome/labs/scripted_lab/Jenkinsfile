@@ -1,0 +1,37 @@
+def runStage(String stageName, String command) {
+    stage(stageName) {
+        echo "Running stage: ${stageName}"
+        sh command
+    }
+}
+def parallelSteps() {
+    parallel(
+            Lint: {
+                echo 'Runing Lint tests...'
+            },
+            Security:{
+                echo 'Runing Security tests...'
+            }
+        )
+}
+node {
+    runStage('Clone', " echo Cloning the repository..." )
+    stage('Build'){
+        echo 'Building the application...'
+    }
+    runStage('Build', 'echo Building the application...')
+    stage('Lint & Security Tests'){
+        parallelSteps()
+    }
+    stage('approve'){
+        def userInput = input(
+            massage: 'Do you want to deploy?',
+            parameters: [choice(name: 'DEPLOY_APPROVAL', choices: ['Yes', 'No'], description: 'Select Yes to proceed with deployment')]
+        )
+        if (userInput == 'No'){
+           error("Deployment was not approved by the user.")
+        }
+
+    }
+    runStage('Deploy', 'echo Deploying the application...')
+}
